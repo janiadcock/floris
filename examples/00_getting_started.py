@@ -10,11 +10,13 @@ fi.floris.solver
 
 # 2. Modify the inputs with a more complex wind turbine layout
 D = 126.0  # Design the layout based on turbine diameter
-x = [0, 0,  6 * D, 6 * D]
-y = [0, 3 * D, 0, 3 * D]
+x = [0., 6. * D, 
+     0., 6. * D]
+y = [6. * D, 6. * D,
+     0., 0.]
 # wind_directions = [270.0, 280.0]
-wind_directions = [270.0]
-wind_speeds = [8.0]
+wind_directions = [260., 270.0, 280.0]
+wind_speeds = [7.0, 8.0]
 
 # Pass the new data to FlorisInterface
 fi.reinitialize(
@@ -25,13 +27,13 @@ fi.reinitialize(
 
 yaw_angles = np.zeros( (1, 1, 4) )  # Construct the yaw array with dimensions for two wind directions, one wind speed, and four turbines
 yaw_angles[0, :, 0] = 25            # At 270 degrees, yaw the first turbine 25 degrees
-yaw_angles[0, :, 1] = 25            # At 270 degrees, yaw the second turbine 25 degrees
+yaw_angles[0, :, 2] = 25            # At 270 degrees, yaw the second turbine 25 degrees
 
 # 3. Calculate the velocities at each turbine for all atmospheric conditions
 # All turbines have 0 degrees yaw
 fi.calculate_wake(yaw_angles = yaw_angles)
 
-print("flow_field_u: ", fi.floris.flow_field.u)
+print("flow_field_u: ", fi.floris.flow_field.u_sorted)
 
 # 4. Get the total farm power
 turbine_powers_baseline = fi.get_turbine_powers() / 1000.0  # Given in W, so convert to kW
